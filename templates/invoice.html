@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <style>
+        /* Basic reset for removing default margins, padding, and setting width/height to 100% */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif; /* Using a standard font for compatibility */
+        }
+
+        /* Main container for the invoice, centers the content, sets size, and adds padding */
+        .invoice-container {
+            width: 100%;
+            max-width: 800px; /* Restricts the width to fit A4 size */
+            margin: 0 auto; /* Centers the container */
+            padding: 20px;
+            border: 1px solid #ccc; /* Light border around the invoice */
+            height: 1100px; /* Fixed height to fit one A4 page */
+            overflow: hidden; /* Ensures content doesn't overflow out of one page */
+            box-sizing: border-box; /* Includes padding and border in the element’s width/height */
+            font-size: 12px; /* Sets a font size small enough to fit content */
+        }
+
+        /* Styling the header of the invoice where the logo and title are placed */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Spaces the logo and title apart */
+            align-items: center; /* Aligns content vertically */
+            padding-bottom: 10px; /* Adds some space below the header */
+        }
+
+        /* Styling the logo image */
+        .header img {
+            width: 150px; /* Adjusts the size of the logo */
+        }
+
+        /* Container for seller and buyer details */
+        .details {
+            display: flex;
+            justify-content: space-between; /* Aligns the seller and buyer details side by side */
+            margin: 10px 0; /* Adds vertical space */
+        }
+
+        /* Styling for individual paragraphs under seller and buyer details */
+        .details p {
+            margin: 2px 0; /* Reduces margin between lines */
+            line-height: 1.2; /* Sets line height for compactness */
+        }
+
+        /* Container for shipping details, aligned to the right */
+        .shipping-details {
+            text-align: right;
+            margin: 10px 0;
+            border-bottom: 1px solid #ccc; /* Adds a bottom border */
+            padding-bottom: 10px;
+        }
+
+        /* Compact line spacing for shipping details */
+        .shipping-details p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        /* Styling for order details, arranged side by side */
+        .order-details {
+            display: flex;
+            justify-content: space-between; /* Aligns the order number and invoice details */
+            margin: 10px 0;
+        }
+
+        /* Compact line spacing for order details */
+        .order-details p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        /* Table for listing items in the invoice */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse; /* Ensures no space between table borders */
+            margin-bottom: 10px;
+            font-size: 10px; /* Smaller font to fit more content */
+        }
+
+        /* Styling for table headers and cells */
+        .items-table th, .items-table td {
+            border: 1px solid #000; /* Adds solid borders around cells */
+            padding: 5px; /* Adds padding inside cells */
+            text-align: left; /* Aligns text to the left */
+        }
+
+        /* Summary section with total amounts aligned to the right */
+        .summary {
+            text-align: right;
+            padding-top: 10px;
+        }
+
+        /* Styles for the amount in words section */
+        .amount-in-words {
+            margin-top: 10px;
+            font-weight: bold; /* Makes the text bold */
+        }
+
+        /* Aligns footer content (like the signature) to the right */
+        .footer-row td {
+            text-align: right;
+        }
+
+        /* Styling for signature image */
+        .footer img {
+            width: 150px; /* Adjusts the signature image size */
+        }
+
+        /* Background color for table headings */
+        .table-heading {
+            background-color: #ccc; /* Light grey background for headings */
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <!-- Header section with logo and invoice title -->
+        <div class="header">
+            <img src="{{ logo_url }}" alt="Company Logo"> <!-- Logo placeholder -->
+            <h1 style="font-size: medium;">Tax Invoice/Bill of Supply</h1> <!-- Invoice title -->
+        </div>
+
+        <!-- Section for seller and buyer details -->
+        <div class="details">
+            <div>
+                <!-- Seller details (left side) -->
+                <p><strong>Sold By:</strong> <br>{{ seller_name }}</p>
+                <p>{{ seller_address }}</p><br><br>
+                <p><strong>PAN No: {{ seller_pan }}</strong></p>
+                <p><strong>GST Registration No: {{ seller_gst }}</strong></p>
+            </div>
+            <div style="text-align: right;">
+                <!-- Buyer details (right side) -->
+                <p><strong>Billing Address: </strong><br>{{ billing_name }}</p>
+                <p>{{ billing_address }}</p>
+                <p><strong>State/UT Code:</strong> {{ billing_state }}</p>
+            </div>
+        </div>
+
+        <!-- Section for shipping details -->
+        <div class="shipping-details">
+            <p><strong>Shipping Address:</strong> <br>{{ shipping_name }}</p>
+            <p>{{ shipping_address }}</p>
+            <p><strong>State/UT Code:</strong> {{ shipping_state }}</p>
+            <p><strong>Place of Supply:</strong> {{ place_of_supply }}</p>
+            <p><strong>Place of Delivery:</strong> {{ place_of_delivery }}</p>
+        </div>
+
+        <!-- Section for order and invoice details -->
+        <div class="order-details">
+            <div>
+                <p><strong>Order Number:</strong> {{ order_no }}</p> <!-- Order number -->
+                <p><strong>Order Date:</strong> {{ order_date }}</p> <!-- Order date -->
+            </div>
+            <div>
+                <p><strong>Invoice Number:</strong> {{ invoice_no }}</p> <!-- Invoice number -->
+                <p><strong>Invoice Date:</strong> {{ invoice_date }}</p> <!-- Invoice date -->
+            </div>
+        </div>
+
+        <!-- Table for listing the items/services in the invoice -->
+        <table class="items-table">
+            <thead>
+                <tr class="table-heading">
+                    <!-- Table column headers -->
+                    <th>Sl. No</th>
+                    <th>Description</th>
+                    <th>Unit Price</th>
+                    <th>Qty</th>
+                    <th>Net Amount</th>
+                    <th>Tax Rate</th>
+                    <th>Tax Type</th>
+                    <th>Tax Amount</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through each item and display details -->
+                {% for item in items %}
+                <tr>
+                    <td>{{ loop.index }}</td> <!-- Item serial number -->
+                    <td>{{ item.description }}</td> <!-- Item description -->
+                    <td>{{ item.unit_price }}</td> <!-- Unit price -->
+                    <td>{{ item.quantity }}</td> <!-- Quantity -->
+                    <td>{{ item.net_amount }}</td> <!-- Net amount -->
+                    <td>{{ item.tax_rate }}</td> <!-- Tax rate -->
+                    <td>{{ item.tax_type }}</td> <!-- Tax type (CGST, SGST, etc.) -->
+                    <td>{{ item.tax_amount }}</td> <!-- Tax amount -->
+                    <td>{{ item.total_amount }}</td> <!-- Total amount (including tax) -->
+                </tr>
+                {% endfor %}
+
+                <!-- Row for displaying the total amount -->
+                <tr>
+                    <td colspan="7" style="text-align: left;"><strong>Total:</strong></td>
+                    <td>{{ total_tax_amount }}</td> <!-- Total tax amount -->
+                    <td>{{ total_amount }}</td> <!-- Total amount of the invoice -->
+                </tr>
+
+                <!-- Row for displaying the amount in words -->
+                <tr>
+                    <td colspan="10" style="text-align: left;"><strong>Amount in Words:<br> {{ amount_in_words }}</strong></td> <!-- Amount in words -->
+                </tr>
+
+                <!-- Footer row for signature -->
+                <tr class="footer-row">
+                    <td colspan="10">
+                        <p>For {{ seller_name }}</p>
+                        <img src="{{ signature_url }}" alt="Signature" style="background-color: #ccc;" width="100%"> <!-- Signature image -->
+                        <p>Authorized Signatory</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section for indicating reverse charge -->
+        <p>Whether tax is payable under reverse charge: {{ reverse_charge }}</p>
+    </div>
+</body>
+</html>

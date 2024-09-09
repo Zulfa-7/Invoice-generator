@@ -1,0 +1,4 @@
+Flask
+WeasyPrint
+Jinja2
+num2words
